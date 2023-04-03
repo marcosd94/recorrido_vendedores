@@ -61,6 +61,7 @@ var traceroutePath;
 var traceroutePathCD;
 var rutas_polylines = [];
 var markers = [];
+var diasCargados = false;
 
 
 var totalTimeOriginalaRuta = 0;
@@ -229,6 +230,15 @@ function crearRutaVendedor(visitas_vendedores, cd, first){
 		addMarker(cd, sala_actual.sala, 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png')
 		//document.getElementById("total_clientes").innerHTML  = visitas_vendedores.length;
 		document.getElementById("total_clientes_t").innerHTML  = visitas_vendedores.length;
+		
+		var total_visitas = visitas_vendedores.length;
+		var tts_minimo = (total_visitas * 270) / 3600
+		var tts_ideal = (total_visitas * 480) / 3600
+		
+		
+		//document.getElementById("tts_minimo").innerHTML  = Math.round((tts_minimo + Number.EPSILON) * 100) / 100;
+		//document.getElementById("tts_ideal").innerHTML  = Math.round((tts_ideal + Number.EPSILON) * 100) / 100;
+		
 		//rutas_polylines.push(traceroutePathCD);
 		
 		totalDistance.push(0);
@@ -413,6 +423,7 @@ function calcularDistancia(waypoints, order_w, puntos) {
 function filePickedVendedores(oEvent) {
 	
     if (oEvent != null && typeof oEvent != 'undefined') {
+	clearMap();
 
     // Get The File From The Input
     var oFile = oEvent.target.files[0];
@@ -490,6 +501,7 @@ function filePickedVendedores(oEvent) {
 
 function obtenerVendedores(lista_vendedores) {
 	lista_vendedores.sort()
+	document.getElementById('listaVendedoresId').innerHTML = '';
 	for(var i in lista_vendedores){
 	$('#listaVendedoresId').append(
 		  '<a href="#" class="list-group-item list-group-item-action vendedor" style="font-size: 12px;" id="'+lista_vendedores[i]+'"><i class="bi bi-person-circle"   style="font-size: 16px;"></i>&nbsp;&nbsp;&nbsp;'+lista_vendedores[i]+'</a>');
@@ -501,9 +513,13 @@ function obtenerVendedores(lista_vendedores) {
 }
 
 function mostrarDias(lista_vendedores) {
-	for(var i in dias){
-	$('#listaDias').append(
-		  '<a href="#" class="list-group-item list-group-item-action" style="font-size: 12px;" id="'+dias[i].clave_dia+'"><i class="bi bi-calendar-date"  style="font-size: 16px;"></i>&nbsp;&nbsp;&nbsp;'+dias[i].descripcion+'</a>');
+	if(!diasCargados){
+		document.getElementById('listaDias').innerHTML = '';
+		for(var i in dias){
+		$('#listaDias').append(
+			  '<a href="#" class="list-group-item list-group-item-action" style="font-size: 12px;" id="'+dias[i].clave_dia+'"><i class="bi bi-calendar-date"  style="font-size: 16px;"></i>&nbsp;&nbsp;&nbsp;'+dias[i].descripcion+'</a>');
+		}
+		diasCargados = true;		
 	}
 	
     //setMarkers(map, obtenerDatosVendedor(a[0], bottom_rm_score_data));
@@ -624,4 +640,41 @@ function salaCambiada() {
 	}
   }
   //document.getElementById("demo").innerHTML = "You selected: " + x;
+}
+
+
+function clearMap(){
+
+		totalDistanceOriginal = 0;
+		totalDistanceOriginalKm = 0;
+		totalDistanceOriginalaRuta = 0;
+		totalDistanceOriginalKmaRuta = 0;
+		totalDistanceOriginalKmTotal = 0;
+		
+		totalTimeOriginalaRuta = 0;
+		totalTimeOriginalHorasaRuta = 0;
+		totalTimeOriginalHoras = 0;
+		totalTimeOriginal = 0;
+		totalTimeOriginalHorasTotal = 0;
+		
+		/*if(typeof traceroutePath != "undefined" && traceroutePath != null){		
+			traceroutePath.setMap(null);
+			traceroutePath.setVisible(false);
+			traceroutePath.setPath(null);
+		}*/
+		for(var j = 0 ; j < markers.length; j++){
+			markers[j].setMap(null);
+			markers[j].setVisible(false);
+		}
+		
+		for(var j = 0 ; j < rutas_polylines.length; j++){
+			rutas_polylines[j].setMap(null);
+			rutas_polylines[j].setVisible(false);
+			//rutas_polylines[j].setPath(null);
+		}
+		rutas_polylines = [];
+		markers = [];
+		
+		$('#resultado').css("display", "none")
+
 }
