@@ -62,6 +62,7 @@ var traceroutePathCD;
 var rutas_polylines = [];
 var markers = [];
 var diasCargados = false;
+var vendedores_finales = []
 
 
 var totalTimeOriginalaRuta = 0;
@@ -184,11 +185,76 @@ function initMap() {
     calculateAndDisplayRoute(directionsService, directionsRenderer, directionsRendererOptimized);
   };
     
-    /*document.getElementById('descargarDatos').addEventListener("click", () => {
+    document.getElementById('descargarDatos').addEventListener("click", () => {
         //console.log(visitas_vendedores);
 		//console.log(totalDistance);
 		descargarDatos();
-    });*/
+    });
+}
+
+function descargarDatos(){
+	// Crear un libro de Excel vacío
+	const wb = XLSX.utils.book_new();
+
+	// Crear una hoja de cálculo a partir del array de objetos
+	const ws = XLSX.utils.json_to_sheet(vendedores_finales);
+
+	// Agregar la hoja de cálculo al libro
+	XLSX.utils.book_append_sheet(wb, ws, 'Hoja1');
+
+	// Generar un archivo Excel
+	const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+
+	// Convertir el archivo a un objeto de tipo Blob
+	const blob = new Blob([s2ab(wbout)], { type: 'application/octet-stream' });
+
+	const fechaActual = new Date();
+	const anio = fechaActual.getFullYear();
+	const mes = fechaActual.getMonth() + 1; // Sumamos 1 porque los meses van de 0 a 11
+	const dia = fechaActual.getDate();
+	const hora = fechaActual.getHours();
+	const minuto = fechaActual.getMinutes();
+
+	// Agregamos ceros a la izquierda si es necesario
+	const mesStr = mes.toString().padStart(2, '0');
+	const diaStr = dia.toString().padStart(2, '0');
+	const horaStr = hora.toString().padStart(2, '0');
+	const minutoStr = minuto.toString().padStart(2, '0');
+
+	// Creamos la cadena de texto en el formato "YYYY-MM-DD"
+	const fechaStr = `${anio}_${mesStr}_${diaStr}_${horaStr}_${minutoStr}`;
+
+
+
+	// Descargar el archivo
+	const fileName = 'kilometraje_vendedores_'+fechaStr+'.xlsx';
+	if (navigator.msSaveBlob) {
+	  // Para Internet Explorer
+	  navigator.msSaveBlob(blob, fileName);
+	} else {
+	  const link = document.createElement('a');
+	  if (link.download !== undefined) {
+		// Para navegadores modernos
+		const url = URL.createObjectURL(blob);
+		link.setAttribute('href', url);
+		link.setAttribute('download', fileName);
+		link.style.visibility = 'hidden';
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+		URL.revokeObjectURL(url);
+	  }
+	}
+
+	// Función auxiliar para convertir una cadena en un array de bytes
+	function s2ab(s) {
+	  const buf = new ArrayBuffer(s.length);
+	  const view = new Uint8Array(buf);
+	  for (let i = 0; i < s.length; i++) {
+		view[i] = s.charCodeAt(i) & 0xFF;
+	  }
+	  return buf;
+	}
 }
 
 function crearRutaVendedor(visitas_vendedores, cd, first){
@@ -197,6 +263,10 @@ function crearRutaVendedor(visitas_vendedores, cd, first){
 	var waypoints = [];
 	
 	if(first){	
+	
+		var descarga = $('#descargarDatos');
+		descarga.css("display", "none");
+		
 		totalDistanceOriginal = 0;
 		totalDistanceOriginalKm = 0;
 		totalDistanceOriginalaRuta = 0;
@@ -230,14 +300,21 @@ function crearRutaVendedor(visitas_vendedores, cd, first){
 		addMarker(cd, sala_actual.sala, 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png')
 		//document.getElementById("total_clientes").innerHTML  = visitas_vendedores.length;
 		document.getElementById("total_clientes_t").innerHTML  = visitas_vendedores.length;
+		for(var x = 0; x < vendedores_finales.length; x++ ){
+			if(vendedores_finales[x].nombre_vendedor == vendedorSeleccionado){
+				vendedores_finales[x][diaSeleccionado+"_CANTIDAD_CLIENTES"] = visitas_vendedores.length;
+			}
+			//const objetoBuscado = arrayUnico.find(objeto => objeto.nombre_vendedor === 'FRANCISCO AQUINO');
+
+		}
 		
 		var total_visitas = visitas_vendedores.length;
 		var tts_minimo = (total_visitas * 270) / 3600
 		var tts_ideal = (total_visitas * 480) / 3600
 		
 		
-		//document.getElementById("tts_minimo").innerHTML  = Math.round((tts_minimo + Number.EPSILON) * 100) / 100;
-		//document.getElementById("tts_ideal").innerHTML  = Math.round((tts_ideal + Number.EPSILON) * 100) / 100;
+		document.getElementById("tts_minimo").innerHTML  = Math.round((tts_minimo + Number.EPSILON) * 100) / 100;
+		document.getElementById("tts_ideal").innerHTML  = Math.round((tts_ideal + Number.EPSILON) * 100) / 100;
 		
 		//rutas_polylines.push(traceroutePathCD);
 		
@@ -257,13 +334,13 @@ function crearRutaVendedor(visitas_vendedores, cd, first){
 	
 		if(final_ruta >= 23){
 			for(var y = 0; y < 23; y++){
-					if(typeof ruta_dia_vendedor[y]["latitud"] == "undefined"){
+					/*if(typeof ruta_dia_vendedor[y]["latitud"] == "undefined"){
 						alert("LATITUD no definida para el PDV: "+ruta_dia_vendedor[y].cliente +" - "+ruta_dia_vendedor[y].razon_social + ", favor corregir para hacer el análisis de este vendedor / día." )
 					}else{ 
 						if(typeof ruta_dia_vendedor[y]["longitud"] == "undefined"){
 							alert("LONGITUD no definida para el PDV: "+ruta_dia_vendedor[y].cliente +" - "+ruta_dia_vendedor[y].razon_social + ", favor corregir para hacer el análisis de este vendedor / día.")
 						}
-					}
+					}*/
 					waypoints.push({location: new google.maps.LatLng(ruta_dia_vendedor[y]["latitud"],ruta_dia_vendedor[y]["longitud"])});
 					//addMarker(new google.maps.LatLng(ruta_dia_vendedor[y]["latitud"],ruta_dia_vendedor[y]["longitud"]), ruta_dia_vendedor[y]["order"]);
 				}
@@ -348,6 +425,24 @@ function calcularDistancia(waypoints, order_w, puntos) {
 			totalDistanceOriginalKmTotal = totalDistanceOriginalKmaRuta + totalDistanceOriginalKm
 			//document.getElementById("total_recorrido").innerHTML  = totalDistanceOriginalKmTotal;
 			document.getElementById("total_recorrido_t").innerHTML  = Math.round((totalDistanceOriginalKmTotal + Number.EPSILON) * 100) / 100;
+			for(var x = 0; x < vendedores_finales.length; x++ ){
+				if(vendedores_finales[x].nombre_vendedor == vendedorSeleccionado){
+					vendedores_finales[x][diaSeleccionado+"_KM"] = Math.round((totalDistanceOriginalKmTotal + Number.EPSILON) * 100) / 100;
+					var descarga = $('#descargarDatos');
+					descarga.css("display", "block");	
+					if(vendedores_finales[x].hasOwnProperty('LU_KM')
+						&& vendedores_finales[x].hasOwnProperty('MA_KM')
+						&& vendedores_finales[x].hasOwnProperty('MI_KM')
+						&& vendedores_finales[x].hasOwnProperty('JU_KM')
+						&& vendedores_finales[x].hasOwnProperty('VI_KM')
+						&& vendedores_finales[x].hasOwnProperty('SA_KM')){
+						var badge = $('#'+vendedores_finales[x].codigo_vendedor+'_badge')
+						badge.css("display", "block")						
+					}
+				}
+				//const objetoBuscado = arrayUnico.find(objeto => objeto.nombre_vendedor === 'FRANCISCO AQUINO');
+
+			}
 		}
 		
 		
@@ -356,6 +451,15 @@ function calcularDistancia(waypoints, order_w, puntos) {
 			totalDistanceOriginalKmTotal = totalTimeOriginalHorasaRuta + totalTimeOriginalHoras
 			//document.getElementById("total_rutas_completas").innerHTML  = Math.round((totalDistanceOriginalKmTotal + Number.EPSILON) * 100) / 100;
 			document.getElementById("total_rutas_completas_t").innerHTML  = Math.round((totalDistanceOriginalKmTotal + Number.EPSILON) * 100) / 100;
+			
+			
+			for(var x = 0; x < vendedores_finales.length; x++ ){
+				if(vendedores_finales[x].nombre_vendedor == vendedorSeleccionado){
+					vendedores_finales[x][diaSeleccionado+"_HS"] = Math.round((totalDistanceOriginalKmTotal + Number.EPSILON) * 100) / 100;
+				}
+				//const objetoBuscado = arrayUnico.find(objeto => objeto.nombre_vendedor === 'FRANCISCO AQUINO');
+
+			}
 		}
 		//document.getElementById("recorrido").innerHTML  = totalDistanceOriginalKm;
 		document.getElementById("recorrido_t").innerHTML  = Math.round((totalDistanceOriginalKm + Number.EPSILON) * 100) / 100;
@@ -402,6 +506,7 @@ function calcularDistancia(waypoints, order_w, puntos) {
 			
 	  } else {
 		console.log("Route: " + status);
+		mostrarDatos(true);
 	  } //else alert("Directions request failed: " + status);
 	  
       //this.directionsRenderer.setDirections(response);
@@ -436,7 +541,6 @@ function filePickedVendedores(oEvent) {
         var data = e.target.result;
         //var cfb = XLS.CFB.read(data, {type: 'binary'});
 		var cfb = XLSX.read(data, {type: 'binary'});
-		console.log(cfb);
 		cfb.SheetNames.forEach(function(sheetName) {
         // Obtain The Current Row As CSV
         var sCSV = XLS.utils.make_csv(cfb.Sheets[sheetName]);   
@@ -444,22 +548,48 @@ function filePickedVendedores(oEvent) {
 
         //$("#my_file_output").html(sCSV);
 		reporte_plano = oJS;
-		vendedores = []
-		var vendedores_finales = []
+		vendedores = [];
+		
+		var descarga = $('#descargarDatos');
+		descarga.css("display", "none");
+		var vendedor = {};
 		for( var i = 0; i < reporte_plano.length; i++){
 			var j = reporte_plano[i].nombre_vendedor
+			var vendedor = {};
+			vendedor.nombre_vendedor = reporte_plano[i].nombre_vendedor.trim();
+			vendedor.codigo_vendedor = reporte_plano[i].codigo_vendedor;
+			vendedor.nombre_region_venta = reporte_plano[i].nombre_region_venta.trim();
 			reporte_plano[i].nombre_vendedor = j.trim();
-			vendedores.push(j.trim());
+			reporte_plano[i].nombre_region_venta = reporte_plano[i].nombre_region_venta.trim();
+			vendedores.push(vendedor);
 		}
 		
+		vendedores_finales = []
+		vendedores_finales = Object.values(vendedores.reduce((obj, item) => {
+		  obj[item.codigo_vendedor] = obj[item.codigo_vendedor] || item;
+		  return obj;
+		}, {}));
 		
-		
+		vendedores_finales.sort((a, b) => {
+		  if (a.nombre_vendedor < b.nombre_vendedor) {
+			return -1; // a debe ir antes que b
+		  }
+		  if (a.nombre_vendedor > b.nombre_vendedor) {
+			return 1; // a debe ir después que b
+		  }
+		  return 0; // a y b son iguales
+		});
+
+		//console.log(vendedores_finales);
+
+		//console.log(arrayUnico);
+		/*
 		var vendedores_unicos = new Set(vendedores)
 		//vendedores_unicos.map(x => vendedores_finales.push(x));
 		
 		vendedores_unicos.forEach(element => {
 			vendedores_finales.push(element)
-		});
+		});*/
 		
 		obtenerVendedores(vendedores_finales);
 		
@@ -504,7 +634,7 @@ function obtenerVendedores(lista_vendedores) {
 	document.getElementById('listaVendedoresId').innerHTML = '';
 	for(var i in lista_vendedores){
 	$('#listaVendedoresId').append(
-		  '<a href="#" class="list-group-item list-group-item-action vendedor" style="font-size: 12px;" id="'+lista_vendedores[i]+'"><i class="bi bi-person-circle"   style="font-size: 16px;"></i>&nbsp;&nbsp;&nbsp;'+lista_vendedores[i]+'</a>');
+		  '<a href="#" class="list-group-item list-group-item-action vendedor" style="font-size: 12px;" id="'+lista_vendedores[i].nombre_vendedor+'"><div class="row"><div class="col-md-10"><i class="bi bi-person-circle"   style="font-size: 16px;"></i>&nbsp;&nbsp;&nbsp;'+lista_vendedores[i].nombre_vendedor+'</div><div class="col-md-2"><span id="'+lista_vendedores[i].codigo_vendedor+'_badge" class="badge bg-success" style="display:none"><i class="bi bi-check-circle me-1"></i></div></div></span></a>');
 	}
 	mostrarDias();
 	
@@ -544,25 +674,31 @@ function getDistanciaMetros(lat1,lon1,lat2,lon2)
 
 
 function obtenerRutaVendedor() {
-		//var cda = new google.maps.LatLng('-25.5334623', '-57.2872565');
-		var cd = new google.maps.LatLng(sala_actual.latitud, sala_actual.longitud);
-		var rutaVendedor = [];
-		for( var i = 0; i < reporte_plano.length; i++){
-			if(reporte_plano[i]["nombre_vendedor"] == vendedorSeleccionado
-			&& reporte_plano[i]["frecuencia_visita"] == diaSeleccionado){
-				rutaVendedor.push(reporte_plano[i]);
+		try{
+			//var cda = new google.maps.LatLng('-25.5334623', '-57.2872565');
+			var cd = new google.maps.LatLng(sala_actual.latitud, sala_actual.longitud);
+			var rutaVendedor = [];
+			for( var i = 0; i < reporte_plano.length; i++){
+				if(reporte_plano[i]["nombre_vendedor"] == vendedorSeleccionado
+				&& reporte_plano[i]["frecuencia_visita"].includes(diaSeleccionado)){
+					rutaVendedor.push(reporte_plano[i]);
+				}
 			}
-		}
-		for( var i = 0; i < rutaVendedor.length; i++){
-			var pdv =  new google.maps.LatLng(rutaVendedor[i]["latitud"],rutaVendedor[i]["longitud"]);
-			//addMarker(pdv, 9999);
-			//rutaVendedor[i]["distancia"] = google.maps.geometry.spherical.computeDistanceBetween(cd, pdv);
-			rutaVendedor[i]["distancia"] = getDistanciaMetros(sala_actual.latitud, sala_actual.longitud, rutaVendedor[i].latitud, rutaVendedor[i].longitud)
-			//getDistanciaMetros(-25.5334623, -57.2872565, rutaVendedor[i].latitud, rutaVendedor[i].longitud)
+			for( var i = 0; i < rutaVendedor.length; i++){
+				var pdv =  new google.maps.LatLng(rutaVendedor[i]["latitud"],rutaVendedor[i]["longitud"]);
+				//addMarker(pdv, 9999);
+				//rutaVendedor[i]["distancia"] = google.maps.geometry.spherical.computeDistanceBetween(cd, pdv);
+				rutaVendedor[i]["distancia"] = getDistanciaMetros(sala_actual.latitud, sala_actual.longitud, rutaVendedor[i].latitud, rutaVendedor[i].longitud)
+				//getDistanciaMetros(-25.5334623, -57.2872565, rutaVendedor[i].latitud, rutaVendedor[i].longitud)
 
+			}
+			
+			crearRutaVendedor(rutaVendedor, cd, true);			
+		} catch (error) {
+		  // código que maneja la excepción
+		  console.log('Se ha producido un error:', error.message);
+		  mostrarDatos(false);
 		}
-		
-		crearRutaVendedor(rutaVendedor, cd, true);
 }
 
 
@@ -677,4 +813,33 @@ function clearMap(){
 		
 		$('#resultado').css("display", "none")
 
+}
+
+
+
+function mostrarDatos(todo) {
+	var datos = '';	
+	var fila_contador = 0;
+	for(var x = 0; x < reporte_plano.length; x++ ){
+		if(reporte_plano[x].nombre_vendedor == vendedorSeleccionado){
+			if(!todo || reporte_plano[x]["frecuencia_visita"].includes(diaSeleccionado)){
+				fila_contador++;
+				var contenido = '<tr>'+
+					'<th>'+fila_contador+'</th>'+
+					'<th scope="row">'+reporte_plano[x].cliente+'</th>'+
+					'<td'+ (typeof reporte_plano[x].razon_social == "undefined" ? ' class="table-danger"' : '') +'>'+reporte_plano[x].razon_social+'</td>'+
+					'<td'+ (typeof reporte_plano[x].nombre_region_venta == "undefined" ? ' class="table-danger"' : '') +'>'+reporte_plano[x].nombre_region_venta+'</td>'+
+					'<td'+ (typeof reporte_plano[x].codigo_territorio == "undefined" ? ' class="table-danger"' : '') +'>'+reporte_plano[x].codigo_territorio+'</td>'+
+					'<td'+ (typeof reporte_plano[x].codigo_vendedor == "undefined" ? ' class="table-danger"' : '') +'>'+reporte_plano[x].codigo_vendedor+'</td>'+
+					'<td'+ (typeof reporte_plano[x].nombre_vendedor == "undefined" ? ' class="table-danger"' : '') +'>'+reporte_plano[x].nombre_vendedor+'</td>'+
+					'<td'+ (typeof reporte_plano[x].frecuencia_visita == "undefined" ? ' class="table-danger"' : '') +'>'+reporte_plano[x].frecuencia_visita+'</td>'+
+					'<td'+ (typeof reporte_plano[x].latitud == "undefined" ? ' class="table-danger"' : '') +'>'+reporte_plano[x].latitud+'</td>'+
+					'<td'+ (typeof reporte_plano[x].longitud == "undefined" ? ' class="table-danger"' : '') +'>'+reporte_plano[x].longitud+'</td>'+
+				  '</tr>';
+				datos += contenido;
+			}
+		}
+	}
+	document.getElementById("datos_excel").innerHTML  = datos;
+	$('#excel_modal').modal('show');
 }
