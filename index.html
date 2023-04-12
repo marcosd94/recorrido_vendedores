@@ -52,6 +52,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
     
 	<!--<link rel="stylesheet" type="text/css" href="./ruta_visitas.css" />-->
 	<script type="text/javascript" src="./ruta_visitas.js"></script> 
@@ -134,14 +135,19 @@
 				</select>
 			 </div>		
 			<h6><i class="bi bi-filetype-xlsx" style="color: #4154f1;font-size: 24px;font-weight: 900;"></i> Importar archivo de visitas</h6>
-            <div class="col-md-9">
+            <div class="col-md-7">
 			  <input class="form-control" type="file" id="vendedores_clientes" style="font-size: 12px;">
 			</div>
-            <div class="col-md-3">
+            <div class="col-md-2">
 			<form method="get" action="data_example.xlsx">
-				<button type="submit" class="btn btn-secondary"  style="font-size:12px;"><i class="bi bi-filetype-xlsx" style="font-size:12px;" download="proposed_file_name"></i>&nbsp;&nbsp;&nbsp;Ejemplo</button>
+				<button type="submit" class="btn btn-secondary"  style="font-size:12px;"><i class="bi bi-filetype-xlsx" style="font-size:12px;" download="proposed_file_name"></i>Ejemplo</button>
 			</form>
 			</div>
+            <div class="col-md-3">
+				<button type="button" class="btn btn-success"  style="font-size:12px; display:none;" id="descargarDatos"><i class="bi bi-file-earmark-arrow-down" style="font-size:12px;"></i>&nbsp;Resultado</button>
+			</div>
+			
+							
           
           <!--<input type="file" id="vendedores_clientes" style="font-size: small;" />-->
         </div>
@@ -149,7 +155,7 @@
 		<section class="section dashboard">
 		<div class="row">		
             <!-- Sales Card -->
-            <!--<div class="col-md-4">
+            <div class="col-md-3">
               <div class="card info-card sales-card">
                 <div class="card-body">
                   <h5 class="card-title">Cant. Clientes</span></h5>
@@ -167,7 +173,7 @@
               </div>
             </div><!-- End Sales Card -->
             <!-- Sales Card -->
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="card info-card sales-card">
                 <div class="card-body">
                   <h5 class="card-title">Km en ruta</span></h5>
@@ -185,7 +191,7 @@
               </div>
             </div><!-- End Sales Card -->
             <!-- Sales Card -->
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="card info-card sales-card">
                 <div class="card-body">
                   <h5 class="card-title">Km desde el CD</span></h5>
@@ -203,7 +209,7 @@
               </div>
             </div><!-- End Sales Card -->
             <!-- Sales Card -->
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="card info-card sales-card">
                 <div class="card-body">
                   <h5 class="card-title">Km Totales</span></h5>
@@ -221,25 +227,7 @@
               </div>
             </div><!-- End Sales Card -->
             <!-- Sales Card -->
-            <div class="col-md-4">
-              <div class="card info-card sales-card">
-                <div class="card-body">
-                  <h5 class="card-title">Cant. Clientes</span></h5>
-
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-house"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6 id="total_clientes_t">145</h6>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div><!-- End Sales Card -->
-            <!-- Sales Card -->
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="card info-card sales-card">
                 <div class="card-body">
                   <h5 class="card-title">Hs en ruta</span></h5>
@@ -257,7 +245,7 @@
               </div>
             </div><!-- End Sales Card -->
             <!-- Sales Card -->
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="card info-card sales-card">
                 <div class="card-body">
                   <h5 class="card-title">Hs con traslado</span></h5>
@@ -275,7 +263,7 @@
               </div>
             </div><!-- End Sales Card -->
             <!-- Sales Card -->
-            <!--<div class="col-md-3">
+            <div class="col-md-3">
               <div class="card info-card sales-card">
                 <div class="card-body">
                   <h5 class="card-title">TTS mínimo (4:30)</span></h5>
@@ -285,7 +273,7 @@
                       <i class="bi bi-stopwatch"></i>
                     </div>
                     <div class="ps-3">
-                      <h6 id="tts_minimo">145</h6>
+                      <h6 id="tts_minimo"></h6>
                     </div>
                   </div>
                 </div>
@@ -293,7 +281,7 @@
               </div>
             </div><!-- End Sales Card -->
             <!-- Sales Card -->
-            <!--<div class="col-md-3">
+            <div class="col-md-3">
               <div class="card info-card sales-card">
                 <div class="card-body">
                   <h5 class="card-title">TTS ideal (8:00)</span></h5>
@@ -303,7 +291,7 @@
                       <i class="bi bi-stopwatch"></i>
                     </div>
                     <div class="ps-3">
-                      <h6 id="tts_ideal">145</h6>
+                      <h6 id="tts_ideal"></h6>
                     </div>
                   </div>
                 </div>
@@ -384,3 +372,33 @@
 </body>
 
 </html>
+<div class="modal fade" tabindex="-1" aria-modal="true" role="dialog" style="display: none;" id="excel_modal">
+	<div class="modal-dialog modal-xl">
+		<div class="modal-content">
+			<div class="modal-header" style="background-color: #f8d7da;color: #842029;font-weight: 900;border-color: #f5c2c7;">
+				<h4 class="modal-title">Favor verifique los datos para el vendedor y día seleccionado</h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+			<table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Cliente</th>
+                    <th scope="col">Razon Social</th>
+                    <th scope="col">Sala</th>
+                    <th scope="col">Territorio</th>
+                    <th scope="col">Código vendedor</th>
+                    <th scope="col">Nombre vendedor</th>
+                    <th scope="col">Frecuencia de visita</th>
+                    <th scope="col">Latitud</th>
+                    <th scope="col">Longitud</th>
+                  </tr>
+                </thead>
+                <tbody id="datos_excel">
+                </tbody>
+              </table>
+			</div>
+		</div>
+	</div>
+</div>
