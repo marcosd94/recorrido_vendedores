@@ -115,8 +115,8 @@ var salas = [
 	},
 	{
 		"sala": "CDE",
-		"latitud": "-26.45301549049452",
-		"longitud": "-56.435312092939704"
+		"latitud": "-25.4955786110775",
+		"longitud": "-54.709214019199756"
 	},
 	{
 		"sala": "ENCARNACION",
