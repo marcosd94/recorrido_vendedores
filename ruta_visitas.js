@@ -71,6 +71,10 @@ var totalTimeOriginalHoras = 0;
 var totalTimeOriginal = 0;
 var totalTimeOriginalHorasTotal = 0;
 
+
+var tts_minimo = 0
+var tts_ideal = 0
+
 var dias = [
 {"clave_dia": "LU",
 "descripcion": "LUNES"},
@@ -309,12 +313,20 @@ function crearRutaVendedor(visitas_vendedores, cd, first){
 		}
 		
 		var total_visitas = visitas_vendedores.length;
-		var tts_minimo = (total_visitas * 270) / 3600
-		var tts_ideal = (total_visitas * 480) / 3600
+		tts_minimo = (total_visitas * 270) / 3600
+		tts_ideal = (total_visitas * 480) / 3600
 		
 		
-		document.getElementById("tts_minimo").innerHTML  = Math.round((tts_minimo + Number.EPSILON) * 100) / 100;
-		document.getElementById("tts_ideal").innerHTML  = Math.round((tts_ideal + Number.EPSILON) * 100) / 100;
+		const horas_minimo    = (Math.floor(tts_minimo*3600 / 0xE10)).toString();
+		const minutos_minimo  = (Math.floor(tts_minimo*3600 / 0x3C ) % 0x3C).toString();
+	
+		document.getElementById("tts_minimo").innerHTML  = `${horas_minimo} hs y  ${minutos_minimo} min.`;
+		//document.getElementById("tts_minimo").innerHTML  = Math.round((tts_minimo + Number.EPSILON) * 100) / 100; 
+		
+		const horas_ideal    = (Math.floor(tts_ideal*3600 / 0xE10)).toString();
+		const minutos_ideal  = (Math.floor(tts_ideal*3600 / 0x3C ) % 0x3C).toString();		
+		document.getElementById("tts_ideal").innerHTML  = `${horas_ideal} hs y  ${minutos_ideal} min.`;
+		//document.getElementById("tts_ideal").innerHTML  = Math.round((tts_ideal + Number.EPSILON) * 100) / 100;
 		
 		//rutas_polylines.push(traceroutePathCD);
 		
@@ -450,7 +462,27 @@ function calcularDistancia(waypoints, order_w, puntos) {
 		if(totalTimeOriginalHorasaRuta != 0 ){
 			totalDistanceOriginalKmTotal = totalTimeOriginalHorasaRuta + totalTimeOriginalHoras
 			//document.getElementById("total_rutas_completas").innerHTML  = Math.round((totalDistanceOriginalKmTotal + Number.EPSILON) * 100) / 100;
-			document.getElementById("total_rutas_completas_t").innerHTML  = Math.round((totalDistanceOriginalKmTotal + Number.EPSILON) * 100) / 100;
+			
+		
+			const horas    = (Math.floor(totalDistanceOriginalKmTotal*3600 / 0xE10)).toString();
+			const minutos  = (Math.floor(totalDistanceOriginalKmTotal*3600 / 0x3C ) % 0x3C).toString();
+		
+			document.getElementById("total_rutas_completas_t").innerHTML  = `${horas} hs y  ${minutos} min.`;
+			
+			var total_total_minimo = tts_minimo + totalDistanceOriginalKmTotal
+			
+			var horas_total    = (Math.floor(total_total_minimo*3600 / 0xE10)).toString();
+			var minutos_total  = (Math.floor(total_total_minimo*3600 / 0x3C ) % 0x3C).toString();
+		
+			document.getElementById("tts_minimo_total").innerHTML  = `${horas_total} hs y  ${minutos_total} min.`;
+			
+			var total_total__ideal = tts_ideal + totalDistanceOriginalKmTotal
+			
+			var horas_total_ideal    = (Math.floor(total_total__ideal*3600 / 0xE10)).toString();
+			var minutos_total_ideal  = (Math.floor(total_total__ideal*3600 / 0x3C ) % 0x3C).toString();
+		
+			document.getElementById("tts_ideal_total").innerHTML  = `${horas_total_ideal} hs y  ${minutos_total_ideal} min.`;
+			//document.getElementById("total_rutas_completas_t").innerHTML  = Math.round((totalDistanceOriginalKmTotal + Number.EPSILON) * 100) / 100;
 			
 			
 			for(var x = 0; x < vendedores_finales.length; x++ ){
@@ -464,7 +496,15 @@ function calcularDistancia(waypoints, order_w, puntos) {
 		//document.getElementById("recorrido").innerHTML  = totalDistanceOriginalKm;
 		document.getElementById("recorrido_t").innerHTML  = Math.round((totalDistanceOriginalKm + Number.EPSILON) * 100) / 100;
 		//document.getElementById("total_horas_ruta").innerHTML  = Math.round((totalTimeOriginalHoras + Number.EPSILON) * 100) / 100;
-		document.getElementById("total_horas_ruta_t").innerHTML  = Math.round((totalTimeOriginalHoras + Number.EPSILON) * 100) / 100;
+		
+		
+		const horas_horas_ruta    = (Math.floor(totalTimeOriginalHoras*3600 / 0xE10)).toString();
+		const minutos_horas_ruta  = (Math.floor(totalTimeOriginalHoras*3600 / 0x3C ) % 0x3C).toString();
+	
+		document.getElementById("total_horas_ruta_t").innerHTML  = `${horas_horas_ruta} hs y  ${minutos_horas_ruta} min.`;
+		
+		
+		//document.getElementById("total_horas_ruta_t").innerHTML  = Math.round((totalTimeOriginalHoras + Number.EPSILON) * 100) / 100;
 		
 		
 		
