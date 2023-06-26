@@ -674,7 +674,7 @@ function obtenerVendedores(lista_vendedores) {
 	document.getElementById('listaVendedoresId').innerHTML = '';
 	for(var i in lista_vendedores){
 	$('#listaVendedoresId').append(
-		  '<a href="#" class="list-group-item list-group-item-action vendedor" style="font-size: 12px;" id="'+lista_vendedores[i].nombre_vendedor+'"><div class="row"><div class="col-md-10"><i class="bi bi-person-circle"   style="font-size: 16px;"></i>&nbsp;&nbsp;&nbsp;'+lista_vendedores[i].nombre_vendedor+'</div><div class="col-md-2"><span id="'+lista_vendedores[i].codigo_vendedor+'_badge" class="badge bg-success" style="display:none"><i class="bi bi-check-circle me-1"></i></div></div></span></a>');
+		  '<a href="#" class="list-group-item list-group-item-action vendedor empleado-list" id="'+lista_vendedores[i].nombre_vendedor+'"><div class="row"><div class="col-md-10"><i class="bi bi-person-circle empleado-list" ></i>&nbsp;&nbsp;&nbsp;'+lista_vendedores[i].nombre_vendedor+'</div><div class="col-md-2"><span id="'+lista_vendedores[i].codigo_vendedor+'_badge" class="badge bg-success" style="display:none"><i class="bi bi-check-circle me-1"></i></div></div></span></a>');
 	}
 	mostrarDias();
 	
@@ -687,7 +687,7 @@ function mostrarDias(lista_vendedores) {
 		document.getElementById('listaDias').innerHTML = '';
 		for(var i in dias){
 		$('#listaDias').append(
-			  '<a href="#" class="list-group-item list-group-item-action" style="font-size: 12px;" id="'+dias[i].clave_dia+'"><i class="bi bi-calendar-date"  style="font-size: 16px;"></i>&nbsp;&nbsp;&nbsp;'+dias[i].descripcion+'</a>');
+			  '<a href="#" class="list-group-item list-group-item-action empleado-list" id="'+dias[i].clave_dia+'"><i class="bi bi-calendar-date empleado-list"></i>&nbsp;&nbsp;&nbsp;'+dias[i].descripcion+'</a>');
 		}
 		diasCargados = true;		
 	}
