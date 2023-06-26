@@ -55,7 +55,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
     
 	<!--<link rel="stylesheet" type="text/css" href="./ruta_visitas.css" />-->
-	<script type="text/javascript" src="./ruta_visitas.js"></script> 
+	<script type="text/javascript" src="ruta_visitas.js"></script> 
 
 
 	<style type="text/css">
@@ -136,24 +136,24 @@
 			 </div>		
 			<h6><i class="bi bi-filetype-xlsx" style="color: #4154f1;font-size: 24px;font-weight: 900;"></i> Importar archivo de visitas</h6>
             <div class="col-md-7">
-			  <input class="form-control" type="file" id="vendedores_clientes" style="font-size: 12px;">
+			  <input class="form-control input-maestro" type="file" id="vendedores_clientes">
 			</div>
             <div class="col-md-2">
 			<form method="get" action="data_example.xlsx">
-				<button type="submit" class="btn btn-secondary"  style="font-size:12px;"><i class="bi bi-filetype-xlsx" style="font-size:12px;" download="proposed_file_name"></i>Ejemplo</button>
+				<button type="submit" class="btn btn-secondary btn-example" >Ejemplo</button>
 			</form>
 			</div>
             <div class="col-md-3">
-				<button type="button" class="btn btn-success"  style="font-size:12px; display:none;" id="descargarDatos"><i class="bi bi-file-earmark-arrow-down" style="font-size:12px;"></i>&nbsp;Resultado</button>
+				<button type="button" class="btn btn-success btn-download"  style="display:none;" id="descargarDatos"><i class="bi bi-file-earmark-arrow-down" ></i>&nbsp;Resultado</button>
 			</div>
 			
 							
           
           <!--<input type="file" id="vendedores_clientes" style="font-size: small;" />-->
         </div>
-		<div id="resultado"  style="display:none; margin-top:16px;">
+		<div id="resultado"  class="resultado" >
 		<section class="section dashboard">
-		<div class="row">		
+		<div class="row resultado_interno">		
             <!-- Sales Card -->
             <div class="col-md-6">
               <div class="card info-card sales-card">
@@ -371,7 +371,7 @@
 		</section>
 		</div>
     </div>
-  <div class="row" id="listados" style="display:none; margin-top:16px;">
+  <div class="row listados" id="listados" style="display:none;">
 	<div class="col-md-7">
 	  <div>
 		<h6>Vendedores</h6>
