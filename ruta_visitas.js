@@ -242,6 +242,7 @@ function descargarDatos(){
 		const url = URL.createObjectURL(blob);
 		link.setAttribute('href', url);
 		link.setAttribute('download', fileName);
+		link.setAttribute('sandbox', 'allow-forms');
 		link.style.visibility = 'hidden';
 		document.body.appendChild(link);
 		link.click();
