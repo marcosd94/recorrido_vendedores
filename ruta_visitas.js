@@ -127,6 +127,16 @@ var salas = [
 		"latitud": "-27.28524641014754",
 		"longitud": "-55.939135503288654"
 	},
+	{
+		"sala": "CAAZAPA",
+		"latitud": "-26.179699339399427",
+		"longitud": "-56.373557028214535"
+	},
+	{
+		"sala": "SAN JUAN",
+		"latitud": "-26.115787229573925",
+		"longitud": "-55.9426932981266"
+	}
 ];
 var sala_actual = {
 		"sala": "CDA",
@@ -763,6 +773,7 @@ function rutaHastaTerritorio(cd, pdv) {
 			totalTimeOriginalaRuta+= legs[i].duration.value;
 			}
 			totalDistanceOriginalKmaRuta = totalDistanceOriginalaRuta/1000;
+			totalDistanceOriginalKmaRuta = totalDistanceOriginalaRuta * 2;
 		
 			//document.getElementById("recorrido_ruta").innerHTML  = totalDistanceOriginalKmaRuta;
 			document.getElementById("recorrido_ruta_t").innerHTML  = Math.round((totalDistanceOriginalKmaRuta + Number.EPSILON) * 100) / 100;
