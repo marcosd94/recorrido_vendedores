@@ -773,7 +773,7 @@ function rutaHastaTerritorio(cd, pdv) {
 			totalTimeOriginalaRuta+= legs[i].duration.value;
 			}
 			totalDistanceOriginalKmaRuta = totalDistanceOriginalaRuta/1000;
-			totalDistanceOriginalKmaRuta = totalDistanceOriginalaRuta * 2;
+			totalDistanceOriginalKmaRuta = totalDistanceOriginalKmaRuta * 2;
 		
 			//document.getElementById("recorrido_ruta").innerHTML  = totalDistanceOriginalKmaRuta;
 			document.getElementById("recorrido_ruta_t").innerHTML  = Math.round((totalDistanceOriginalKmaRuta + Number.EPSILON) * 100) / 100;
