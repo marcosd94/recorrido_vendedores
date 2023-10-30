@@ -136,6 +136,16 @@ var salas = [
 		"sala": "SAN JUAN",
 		"latitud": "-26.115787229573925",
 		"longitud": "-55.9426932981266"
+	},
+	{
+		"sala": "SAN ALBERTO",
+		"latitud": "-24.9859866787354",
+		"longitud": "-54.90473389977624"
+	},
+	{
+		"sala": "SANTA RITA",
+		"latitud": "-25.80366270661429",
+		"longitud": "-55.09596884604732"
 	}
 ];
 var sala_actual = {
@@ -203,6 +213,12 @@ function initMap() {
         //console.log(visitas_vendedores);
 		//console.log(totalDistance);
 		descargarDatos();
+    });
+	
+    document.getElementById('verDetalles').addEventListener("click", () => {
+        //console.log(visitas_vendedores);
+		//console.log(totalDistance);
+		mostrarDatos(true);
     });
 }
 
@@ -281,6 +297,9 @@ function crearRutaVendedor(visitas_vendedores, cd, first){
 	
 		var descarga = $('#descargarDatos');
 		descarga.css("display", "none");
+		
+		var detallesVista = $('#verDetalles');
+		detallesVista.css("display", "none");
 		
 		totalDistanceOriginal = 0;
 		totalDistanceOriginalKm = 0;
@@ -453,6 +472,10 @@ function calcularDistancia(waypoints, order_w, puntos) {
 					vendedores_finales[x][diaSeleccionado+"_KM"] = Math.round((totalDistanceOriginalKmTotal + Number.EPSILON) * 100) / 100;
 					var descarga = $('#descargarDatos');
 					descarga.css("display", "block");	
+					
+					var detallesVista = $('#verDetalles');
+					detallesVista.css("display", "block");
+					
 					if(vendedores_finales[x].hasOwnProperty('LU_KM')
 						&& vendedores_finales[x].hasOwnProperty('MA_KM')
 						&& vendedores_finales[x].hasOwnProperty('MI_KM')
@@ -773,7 +796,7 @@ function rutaHastaTerritorio(cd, pdv) {
 			totalTimeOriginalaRuta+= legs[i].duration.value;
 			}
 			totalDistanceOriginalKmaRuta = totalDistanceOriginalaRuta/1000;
-			totalDistanceOriginalKmaRuta = totalDistanceOriginalKmaRuta * 2;
+			//totalDistanceOriginalKmaRuta = totalDistanceOriginalKmaRuta * 2;
 		
 			//document.getElementById("recorrido_ruta").innerHTML  = totalDistanceOriginalKmaRuta;
 			document.getElementById("recorrido_ruta_t").innerHTML  = Math.round((totalDistanceOriginalKmaRuta + Number.EPSILON) * 100) / 100;
